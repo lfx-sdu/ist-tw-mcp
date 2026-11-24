@@ -1,7 +1,7 @@
 # HTN workspace example
 
-Use the HTN tenant token with the hosted MCP server. Follow the
-[client setup](../../README.md#connect-your-mcp-client) or use the fields in
+Use the HTN token from your pilot access email with the hosted MCP server.
+Follow the [client setup](../../README.md#connect-your-mcp-client) or use
 [mcp.example.json](mcp.example.json). The server entry is `taiwan-transfer-pilot-htn`.
 
 ## Review the historical results and rerun the first plan

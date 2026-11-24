@@ -6,11 +6,13 @@ sales audits in Excel.
 
 ## Connect your MCP client
 
+The pilot team emails the access token for your brand separately.
+
 1. Add a remote **Streamable HTTP** MCP server in your existing client.
 2. Enter `https://ist-tw.sdu-alchemist.org/mcp`.
 3. In the client's secure header settings, set `Authorization` to
-   `Bearer <your pilot token>`. Use the token issued for your workspace.
-   Keep the token out of the conversation.
+   `Bearer <your pilot token>`, using the token from your brand’s email.
+   Keep the token in your client settings and out of the conversation.
 4. Ask your agent:
 
    > Find my historical pilot workspace and give me the download links for my
@@ -26,7 +28,7 @@ after 15 minutes. Ask the agent for a fresh link if it expires.
 
 ## Workspace examples
 
-Choose the directory that matches the tenant token issued by the pilot operator.
+Choose the directory for the brand named in your pilot access email.
 Each example includes MCP settings, a first-plan historical rerun, and a
 synthetic walkthrough.
 
@@ -76,7 +78,7 @@ data before import. The browser upload accepts files up to 64 MiB.
 - **Tools missing.** Verify the `/mcp` URL and select Streamable HTTP in the
   client.
 - **Authentication error.** Confirm the client sends the `Authorization` header
-  with the token issued for your tenant.
+  with the token from your brand’s pilot access email.
 - **Job pending.** Poll the existing job ID. Use workspace history to find it
   after restarting a session.
 - **Link expired.** Request a fresh browser link from the agent.

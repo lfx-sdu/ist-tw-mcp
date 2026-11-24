@@ -1,7 +1,7 @@
 # APM workspace example
 
-Use the APM tenant token with the hosted MCP server. Follow the
-[client setup](../../README.md#connect-your-mcp-client) or use the fields in
+Use the APM token from your pilot access email with the hosted MCP server.
+Follow the [client setup](../../README.md#connect-your-mcp-client) or use
 [mcp.example.json](mcp.example.json). The server entry is `taiwan-transfer-pilot-apm`.
 
 ## Review the historical results and rerun the first plan

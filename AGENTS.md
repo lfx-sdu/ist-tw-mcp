@@ -5,7 +5,8 @@ Use the configured remote Streamable HTTP server. The generic example names it
 [APM](examples/apm/README.md), and [ROS](examples/ros/README.md) examples each
 provide a separate server entry and historical and synthetic walkthroughs.
 
-The MCP client sends the participant's credential in its secure Authorization header.
+The participant receives their brand’s token in a separate email and enters it
+in the MCP client’s secure Authorization header.
 Keep the credential out of tool arguments, conversation, source files, and reports.
 Keep raw uploads and generated files outside version control.
 
