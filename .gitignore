@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+.secrets/
+*.token
+pilot-token
+mcp.local.json
+data/
+downloads/
+*.xlsx
+*.pem
+*.key
+.mcp.json
+.vscode/mcp.json
+.DS_Store

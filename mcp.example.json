@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "taiwan-transfer-pilot": {
+      "command": "/absolute/path/to/ist-tw-mcp/.venv/bin/python",
+      "args": ["/absolute/path/to/ist-tw-mcp/transfer_mcp.py"],
+      "env": {
+        "TRANSFER_API_URL": "https://ist-tw.sdu-alchemist.org",
+        "TRANSFER_API_TOKEN_FILE": "/absolute/path/to/private/pilot-token",
+        "TRANSFER_MCP_DOWNLOAD_DIR": "/absolute/path/to/private/pilot-downloads"
+      }
+    }
+  }
+}
