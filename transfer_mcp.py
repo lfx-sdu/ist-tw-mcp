@@ -1,6 +1,8 @@
 """Per-customer MCP stdio tools using the same authenticated HTTP API."""
 import base64,json,os
 from contextlib import asynccontextmanager
+import hashlib
+import re
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Annotated,Literal
@@ -186,25 +188,55 @@ def create_mcp(api_url,api_token,*,client=None,max_file_bytes=8*1024*1024,downlo
         if artifact is None:
             raise ValueError('The requested file is unavailable for this job.')
 
-        destination = download_root / f'{job_id}-{artifact_name}'
+        saved = await save_file(f"/v1/artifacts/{artifact['id']}", f'{job_id}-{artifact_name}')
+        return dict(job_id=job_id, name=artifact_name, **saved)
+
+    @server.tool()
+    async def list_published_files(workspace_id: ResourceId) -> dict:
+        """List the historical PDF, workbook and dated rerun inputs assigned to this workspace."""
+        return await call('GET', f'/v1/workspaces/{workspace_id}/published-files')
+
+    @server.tool()
+    async def download_published_file(workspace_id: ResourceId, file_id: ResourceId) -> dict:
+        """Verify and save a published historical file in the configured local downloads directory."""
+        if download_root is None:
+            raise ValueError('Set TRANSFER_MCP_DOWNLOAD_DIR in the local MCP launcher to save files.')
+        catalogue = await list_published_files(workspace_id)
+        file = next((entry for entry in catalogue['files'] if entry['id'] == file_id), None)
+        if file is None:
+            raise ValueError('The requested file is unavailable in this workspace.')
+        name = file['name']
+        if not re.fullmatch(r'[A-Za-z0-9_.-]{1,160}', name):
+            raise ValueError('Invalid published filename.')
+        saved = await save_file(f'/v1/published-files/{file_id}', f'{file_id}-{name}', expected=file)
+        return dict(file_id=file_id, name=name, **saved)
+
+    async def save_file(endpoint, filename, expected=None):
+        destination = download_root / filename
         temporary_path = None
+        checksum = hashlib.sha256()
         try:
             async with api_session() as session:
-                async with session.stream('GET', f"/v1/artifacts/{artifact['id']}",
-                                          headers=headers, follow_redirects=False) as response:
+                async with session.stream('GET', endpoint, headers=headers, follow_redirects=False) as response:
                     response.raise_for_status()
                     download_root.mkdir(mode=0o700, parents=True, exist_ok=True)
                     with NamedTemporaryFile(dir=download_root, prefix='.download-', delete=False) as temporary:
                         temporary_path = Path(temporary.name)
                         async for chunk in response.aiter_bytes():
+                            if expected:
+                                if temporary.tell() + len(chunk) > expected['size_bytes']:
+                                    raise ValueError('Published file exceeds its declared size.')
+                                checksum.update(chunk)
                             temporary.write(chunk)
                         size = temporary.tell()
+            if expected and (size != expected['size_bytes'] or checksum.hexdigest() != expected['sha256']):
+                raise ValueError('Published file integrity check failed.')
             os.replace(temporary_path, destination)
         finally:
             if temporary_path is not None:
                 temporary_path.unlink(missing_ok=True)
 
-        return dict(job_id=job_id, name=artifact_name, path=str(destination), size_bytes=size)
+        return dict(path=str(destination), size_bytes=size)
 
     return server
 

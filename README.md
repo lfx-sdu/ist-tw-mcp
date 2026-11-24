@@ -1,8 +1,8 @@
 # Taiwan Transfer Pilot MCP
 
 Connect a local MCP client to the Taiwan inter-store transfer pilot. Participants
-can inspect their workspace, upload approved data, run a plan, find past runs,
-and save the recommendations and weekly sales audit as Excel files.
+can download their historical reports and planning inputs, rerun a plan,
+find past jobs, and save recommendations and weekly sales audits as Excel files.
 
 API base URL: `https://ist-tw.sdu-alchemist.org`
 
@@ -38,8 +38,9 @@ issued by the pilot operator.
 
 4. Ask your agent:
 
-   > List my pilot workspaces. Find the most recent successful Full plan in my
-   > demo workspace, show me the audit, and save the Excel recommendations.
+   > Find my historical pilot workspace. List and save my Phase 3 PDF and
+   > workbook. Run a Full plan using the workspace's historical inputs and
+   > save the new recommendations workbook when it succeeds.
 
 If you have a saved audit job, ask the agent to recover it from workspace
 history and save `weekly_audit.xlsx`. The tool returns a path on your computer.
@@ -47,20 +48,21 @@ history and save `weekly_audit.xlsx`. The tool returns a path on your computer.
 ## Workspace examples
 
 Choose the directory that matches the tenant token issued by the pilot operator.
-Each example includes its own MCP settings and uses workspace discovery to find
-the correct IDs.
+Each example includes MCP settings, a first-plan historical rerun, and a
+synthetic walkthrough.
 
 | Workspace | Example |
 | --- | --- |
-| HTN | [Compare saved Full and Allocation-only plans](examples/htn/README.md) |
-| APM | [Recover and open the weekly sales audit](examples/apm/README.md) |
-| ROS | [Review recommendations and preview a piece cap](examples/ros/README.md) |
+| HTN | [Rerun the first plan and compare planning modes](examples/htn/README.md) |
+| APM | [Rerun the first plan and recover the sample weekly sales audit](examples/apm/README.md) |
+| ROS | [Rerun the first plan and preview a piece cap](examples/ros/README.md) |
 
 ## Common workflows
 
 | What you want to do | MCP tools |
 | --- | --- |
 | Find your workspace or recover a job ID | `list_workspaces`, `list_workspace_planning_jobs` |
+| Get the Phase 3 PDF, workbook or historical input archive | `list_published_files`, `download_published_file` |
 | Review a profile or preview rule changes | `get_profile_template`, `create_profile_draft`, `validate_profile_draft`, `preview_profile_draft` |
 | Run a plan | `get_data_version`, `get_run_options`, `create_planning_job`, `get_planning_job` |
 | Review recommendations or save the result | `list_planning_recommendations`, `download_planning_artifact` |
@@ -73,7 +75,14 @@ selected version. **Allocation-only** supports scenarios with limits such as
 maximum pieces, additional source reserves, and route exclusions. Ask the agent
 to check the available options before submitting a run.
 
-A weekly sales audit uses a successful prior-week plan and a version with
+The historical workspace starts with a fixed data version. Call
+`get_data_version` using the workspace's `head_version_id` and use its
+`source_contract.as_of` for a rerun. **Full** uses the sealed historical forecast
+scores and reruns planning. **Allocation-only** uses historical sales and stock.
+The Phase 3 files contain the completed multiweek study. The input archive
+covers its first decision date. Use a separate workspace to upload new data.
+
+A new weekly sales audit uses a successful prior-week plan and a version with
 complete recorded sales for the reviewed Monday–Sunday week. It compares
 recommendations due to arrive during that week with gross sales, returns, and
 net sales for the receiving store and SKU.
@@ -91,7 +100,7 @@ binary upload API after creating an upload slot.
   issued that token for your tenant.
 - **Job pending.** Poll the existing job ID and use workspace history if the
   session was restarted.
-- **Download unavailable.** Confirm the job succeeded and that the requested
-  filename appears in its result. Confirm your download directory is writable.
+- **Download unavailable.** Check the requested file in the workspace catalogue
+  or completed job. Confirm your download directory is writable.
 
 See [AGENTS.md](AGENTS.md) for the agent workflow and data-handling instructions.

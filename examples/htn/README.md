@@ -5,6 +5,26 @@ Follow the [client setup](../../README.md#connect-your-mcp-client) to install th
 shared adapter and fill in the absolute paths. The MCP server entry is
 `taiwan-transfer-pilot-htn`.
 
+## Review the historical results and rerun the first plan
+
+Ask your agent:
+
+> Select my **HTN historical pilot** workspace. Save my Phase 3 PDF and workbook,
+> rerun the Full plan for the supplied date, and save the recommendations workbook.
+
+1. Use `list_workspaces` to discover this workspace and its `head_version_id`.
+2. Call `list_published_files`. Use `download_published_file` with the
+   workspace ID and each file ID you want to save. The catalogue includes a
+   PDF, an Excel workbook, and the historical planning inputs archive.
+3. Call `get_data_version`, then submit `create_planning_job` with its version
+   ID, its `source_contract.as_of` date, `run_type: full`, and a fresh idempotency key.
+4. Poll `get_planning_job` and save `recommendations.xlsx` with
+   `download_planning_artifact`. The version lists the expected result for the
+   supplied first planning date.
+
+The saved Phase 3 workbook covers the multiweek historical study. The new
+recommendations workbook covers the first planning date and its inputs.
+
 ## Compare the two saved planning modes
 
 Ask your agent:

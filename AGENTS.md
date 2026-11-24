@@ -3,7 +3,7 @@
 Use the configured local stdio server. The generic example names it
 `taiwan-transfer-pilot`. The [HTN](examples/htn/README.md),
 [APM](examples/apm/README.md), and [ROS](examples/ros/README.md) examples each
-provide a separate server entry and a workflow for that demo workspace.
+provide a separate server entry and historical and synthetic walkthroughs.
 
 The adapter reads the participant's credential from local configuration. Keep the
 credential out of tool arguments, conversation, source files, and reports.
@@ -16,7 +16,13 @@ Keep raw uploads and generated files outside version control.
 2. Use `list_workspace_planning_jobs` to find saved jobs. It returns job IDs,
    data versions, dates, kinds, modes, and statuses. Use `get_planning_job` to
    obtain the full audit or list of downloadable files.
-3. For a demo rerun, use the baseline version and `as_of` date from the selected
+3. For a historical rerun, select the supplied historical pilot workspace, read
+   its `head_version_id` with `get_data_version`, and submit the exact
+   `source_contract.as_of` date. Use `list_published_files` and
+   `download_published_file` for the completed Phase 3 PDF, Phase 3 workbook,
+   or archive of as-of planning inputs. The completed research results cover a
+   longer period than the first-plan rerun.
+4. For a demo rerun, use the baseline version and `as_of` date from the selected
    earlier demo plan or inputs supplied by the participant. A later sales
    version can apply to a weekly audit while the earlier version applies to its
    plan.
@@ -38,7 +44,7 @@ Keep raw uploads and generated files outside version control.
 ## Prepare and upload authorized files
 
 1. Confirm the participant wants the specified files uploaded into the selected
-   workspace. Ask which source columns represent identifiers, dates, quantities,
+   upload-enabled workspace. The supplied historical workspace is read-only. Ask which source columns represent identifiers, dates, quantities,
    and stock or reservations when their meanings are unclear.
 2. Use `get_dataset_contracts` for accepted names and schemas. For unfamiliar
    exports, upload as `unmapped`, inspect the upload, validate the proposed
