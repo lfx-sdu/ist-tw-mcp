@@ -1,49 +1,28 @@
 # Taiwan Transfer Pilot MCP
 
-Connect a local MCP client to the Taiwan inter-store transfer pilot. Participants
-can download their historical reports and planning inputs, rerun a plan,
-find past jobs, and save recommendations and weekly sales audits as Excel files.
-
-API base URL: `https://ist-tw.sdu-alchemist.org`
-
-The MCP adapter runs as a local stdio process and calls the API over HTTPS.
+Connect your MCP client to the hosted Taiwan inter-store transfer pilot. Use it
+to retrieve historical reports, rerun plans, and open recommendations and weekly
+sales audits in Excel.
 
 ## Connect your MCP client
 
-You need Python 3.12, a client that supports local stdio MCP, and a tenant token
-issued by the pilot operator.
-
-1. Clone the repository and install the client.
-
-   ```sh
-   git clone https://github.com/lfx-sdu/ist-tw-mcp.git
-   cd ist-tw-mcp
-   python3.12 -m venv .venv
-   .venv/bin/python -m pip install -r requirements.txt
-   ```
-
-   On Windows, use `py -3.12 -m venv .venv` and
-   `.venv\Scripts\python.exe -m pip install -r requirements.txt`. Use that
-   executable in the following step.
-
-2. Save the token in a private text file outside the repository and restrict it
-   to your account. On macOS or Linux, set its permissions to `600`. The file
-   should contain the token alone. A client with secure environment settings can
-   supply `TRANSFER_API_TOKEN` directly.
-
-3. Add the server entry from [mcp.example.json](mcp.example.json) to your client's
-   local MCP settings. Replace the executable, script, token file, and download
-   directory with absolute paths. The download directory is created when needed.
-   Reload the MCP client.
-
+1. Add a remote **Streamable HTTP** MCP server in your existing client.
+2. Enter `https://ist-tw.sdu-alchemist.org/mcp`.
+3. In the client's secure header settings, set `Authorization` to
+   `Bearer <your pilot token>`. Use the token issued for your workspace.
+   Keep the token out of the conversation.
 4. Ask your agent:
 
-   > Find my historical pilot workspace. List and save my Phase 3 PDF and
-   > workbook. Run a Full plan using the workspace's historical inputs and
-   > save the new recommendations workbook when it succeeds.
+   > Find my historical pilot workspace and give me the download links for my
+   > Phase 3 PDF and workbook.
 
-If you have a saved audit job, ask the agent to recover it from workspace
-history and save `weekly_audit.xlsx`. The tool returns a path on your computer.
+This setup runs in the hosted service. Participants can connect without
+installing Python or cloning the repository. The client must support remote
+Streamable HTTP with a custom bearer header. The
+[example configuration](mcp.example.json) shows the connection fields.
+
+The agent returns browser links for reports and job files. Each link expires
+after 15 minutes. Ask the agent for a fresh link if it expires.
 
 ## Workspace examples
 
@@ -66,7 +45,7 @@ synthetic walkthrough.
 | Review a profile or preview rule changes | `get_profile_template`, `create_profile_draft`, `validate_profile_draft`, `preview_profile_draft` |
 | Run a plan | `get_data_version`, `get_run_options`, `create_planning_job`, `get_planning_job` |
 | Review recommendations or save the result | `list_planning_recommendations`, `download_planning_artifact` |
-| Inspect and map an approved export | `get_dataset_contracts`, `upload_data_file`, `inspect_uploaded_data`, `validate_data_mapping`, `save_mapping_version`, `apply_data_mapping` |
+| Inspect and map an approved export | `get_dataset_contracts`, `create_upload`, `get_upload_status`, `inspect_uploaded_data`, `validate_data_mapping`, `save_mapping_version`, `apply_data_mapping` |
 | Commit baseline inputs or weekly changes | `import_data_batch` |
 | Compare a prior plan with the completed week's sales | `create_weekly_audit`, `get_planning_job`, `download_planning_artifact` |
 
@@ -87,20 +66,19 @@ complete recorded sales for the reviewed Monday–Sunday week. It compares
 recommendations due to arrive during that week with gross sales, returns, and
 net sales for the receiving store and SKU.
 
-Pilot workspaces may contain synthetic demo data. Confirm the workspace and
-approval to upload before sending actual exports. The upload tool accepts up to
-8 MiB of decoded CSV or Parquet content. For larger files, use the authenticated
-binary upload API after creating an upload slot.
+To upload an approved CSV or Parquet file, have the agent call `create_upload`
+in an upload-enabled workspace. Open the returned link, choose the file, and
+click **Upload**. Then tell the agent to check `get_upload_status` and review the
+data before import. The browser upload accepts files up to 64 MiB.
 
 ## Troubleshooting
 
-- **Tools missing.** Reload the MCP client and verify the absolute paths in its
-  configuration.
-- **Authentication error.** Check the token file and confirm the pilot operator
-  issued that token for your tenant.
-- **Job pending.** Poll the existing job ID and use workspace history if the
-  session was restarted.
-- **Download unavailable.** Check the requested file in the workspace catalogue
-  or completed job. Confirm your download directory is writable.
+- **Tools missing.** Verify the `/mcp` URL and select Streamable HTTP in the
+  client.
+- **Authentication error.** Confirm the client sends the `Authorization` header
+  with the token issued for your tenant.
+- **Job pending.** Poll the existing job ID. Use workspace history to find it
+  after restarting a session.
+- **Link expired.** Request a fresh browser link from the agent.
 
 See [AGENTS.md](AGENTS.md) for the agent workflow and data-handling instructions.

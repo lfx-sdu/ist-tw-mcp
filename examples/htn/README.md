@@ -1,9 +1,8 @@
 # HTN workspace example
 
-Use the HTN tenant token and the settings in [mcp.example.json](mcp.example.json).
-Follow the [client setup](../../README.md#connect-your-mcp-client) to install the
-shared adapter and fill in the absolute paths. The MCP server entry is
-`taiwan-transfer-pilot-htn`.
+Use the HTN tenant token with the hosted MCP server. Follow the
+[client setup](../../README.md#connect-your-mcp-client) or use the fields in
+[mcp.example.json](mcp.example.json). The server entry is `taiwan-transfer-pilot-htn`.
 
 ## Review the historical results and rerun the first plan
 
@@ -43,7 +42,7 @@ The agent can follow these steps:
    Compare the planned pieces and the recommendation counts. Use the run
    audit to report which inputs and settings the job used.
 4. Call `download_planning_artifact` with `recommendations.xlsx` for each job.
-   The two workbooks have distinct job IDs in their filenames.
+   Open each returned browser link to download its workbook.
 
 The saved plans use synthetic inputs. This walkthrough retrieves those plans
 from history.

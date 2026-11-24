@@ -1,12 +1,12 @@
 # Working with the Taiwan Transfer Pilot MCP
 
-Use the configured local stdio server. The generic example names it
+Use the configured remote Streamable HTTP server. The generic example names it
 `taiwan-transfer-pilot`. The [HTN](examples/htn/README.md),
 [APM](examples/apm/README.md), and [ROS](examples/ros/README.md) examples each
 provide a separate server entry and historical and synthetic walkthroughs.
 
-The adapter reads the participant's credential from local configuration. Keep the
-credential out of tool arguments, conversation, source files, and reports.
+The MCP client sends the participant's credential in its secure Authorization header.
+Keep the credential out of tool arguments, conversation, source files, and reports.
 Keep raw uploads and generated files outside version control.
 
 ## Discover the workspace and data
@@ -39,15 +39,17 @@ Keep raw uploads and generated files outside version control.
   `list_planning_recommendations` tool to inspect rows.
 - Use `download_planning_artifact` for a file listed on the completed job. Common
   names include `recommendations.xlsx`, `recommendations.csv`, and
-  `run_audit.json`. Report the returned local path and the data version used.
+  `run_audit.json`. Share the returned browser link and data version with the participant.
+  Each link expires after 15 minutes.
 
 ## Prepare and upload authorized files
 
 1. Confirm the participant wants the specified files uploaded into the selected
-   upload-enabled workspace. The supplied historical workspace is read-only. Ask which source columns represent identifiers, dates, quantities,
-   and stock or reservations when their meanings are unclear.
-2. Use `get_dataset_contracts` for accepted names and schemas. For unfamiliar
-   exports, upload as `unmapped`, inspect the upload, validate the proposed
+   upload-enabled workspace. Identify the source columns for IDs, dates, quantities,
+   and stock or reservations before import.
+2. Use `get_dataset_contracts` for accepted names and schemas. Give the participant
+   the browser link from `create_upload` and check `get_upload_status` afterward. For unfamiliar exports, use
+   `unmapped`, inspect the upload, validate the proposed
    mapping, then save and apply its version. Preserve leading zeroes in codes
    and stable source identifiers. Keep unknown quantities as unresolved.
 3. Commit the canonical upload IDs with `import_data_batch`. A baseline imports

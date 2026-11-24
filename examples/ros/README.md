@@ -1,9 +1,8 @@
 # ROS workspace example
 
-Use the ROS tenant token and the settings in [mcp.example.json](mcp.example.json).
-Follow the [client setup](../../README.md#connect-your-mcp-client) to install the
-shared adapter and fill in the absolute paths. The MCP server entry is
-`taiwan-transfer-pilot-ros`.
+Use the ROS tenant token with the hosted MCP server. Follow the
+[client setup](../../README.md#connect-your-mcp-client) or use the fields in
+[mcp.example.json](mcp.example.json). The server entry is `taiwan-transfer-pilot-ros`.
 
 ## Review the historical results and rerun the first plan
 

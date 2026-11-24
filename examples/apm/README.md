@@ -1,9 +1,8 @@
 # APM workspace example
 
-Use the APM tenant token and the settings in [mcp.example.json](mcp.example.json).
-Follow the [client setup](../../README.md#connect-your-mcp-client) to install the
-shared adapter and fill in the absolute paths. The MCP server entry is
-`taiwan-transfer-pilot-apm`.
+Use the APM tenant token with the hosted MCP server. Follow the
+[client setup](../../README.md#connect-your-mcp-client) or use the fields in
+[mcp.example.json](mcp.example.json). The server entry is `taiwan-transfer-pilot-apm`.
 
 ## Review the historical results and rerun the first plan
 
@@ -41,7 +40,7 @@ The agent can follow these steps:
    `kind: weekly_audit`. Use `get_planning_job` to confirm the audited week
    and identify the saved plan and sales version used.
 3. Call `download_planning_artifact` with the **audit job's ID** and the
-   filename `weekly_audit.xlsx`. Return the saved file path.
+   filename `weekly_audit.xlsx`. Return the browser download link.
 4. Use the workbook's **Receiver sales** sheet to compare recommended pieces
    with gross sales, returns, and net sales by receiving store and SKU.
    **Summary** records the dates and the two input versions.
