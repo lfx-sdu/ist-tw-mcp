@@ -1,7 +1,11 @@
 # Working with the Taiwan Transfer Pilot MCP
 
-Use the configured local stdio server named `taiwan-transfer-pilot`. The
-adapter reads the participant's credential from local configuration. Keep the
+Use the configured local stdio server. The generic example names it
+`taiwan-transfer-pilot`. The [HTN](examples/htn/README.md),
+[APM](examples/apm/README.md), and [ROS](examples/ros/README.md) examples each
+provide a separate server entry and a workflow for that demo workspace.
+
+The adapter reads the participant's credential from local configuration. Keep the
 credential out of tool arguments, conversation, source files, and reports.
 Keep raw uploads and generated files outside version control.
 

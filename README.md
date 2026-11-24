@@ -44,6 +44,18 @@ issued by the pilot operator.
 If you have a saved audit job, ask the agent to recover it from workspace
 history and save `weekly_audit.xlsx`. The tool returns a path on your computer.
 
+## Workspace examples
+
+Choose the directory that matches the tenant token issued by the pilot operator.
+Each example includes its own MCP settings and uses workspace discovery to find
+the correct IDs.
+
+| Workspace | Example |
+| --- | --- |
+| HTN | [Compare saved Full and Allocation-only plans](examples/htn/README.md) |
+| APM | [Recover and open the weekly sales audit](examples/apm/README.md) |
+| ROS | [Review recommendations and preview a piece cap](examples/ros/README.md) |
+
 ## Common workflows
 
 | What you want to do | MCP tools |
